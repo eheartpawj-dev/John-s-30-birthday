@@ -1215,23 +1215,23 @@ Eti 💘
 
   // Your Google Drive FILE IDs (from the links you sent)
   const DRIVE_FILE_IDS = [
-    "1uAgr9slhr2xncNJRvun7NLa62Y3CRX6M",
-    "10c3axW2wEbbO_gH77tiAvHuuJp5K-Js5",
-    "1fvQMFjSzx0pk9dBUze_0QZfFmyX-uv97",
-    "134Nn-uddsexxHhfn4t-gbH2OwWUQvT2M",
-    "1hEOb2yWMnjdiwvYFEFaDqNuMZneRItg4",
-    "17FDudA_X4mtPYd1UUnmrG9VFVJyXGHMJ"
+    "pics-for-bd/1.jpg",
+  "pics-for-bd/2.jpg",
+  "pics-for-bd/3.jpg",
+  "pics-for-bd/4.jpg",
+  "pics-for-bd/5.jpg",
+  "pics-for-bd/6.jpg"
   ];
   const driveSrc = (id) => `https://drive.google.com/uc?export=view&id=${encodeURIComponent(id)}`;
 
   // Put Drive images into the gallery
   const imgEls = [
-    document.getElementById("img1"),
-    document.getElementById("img2"),
-    document.getElementById("img3"),
-    document.getElementById("img4"),
-    document.getElementById("img5"),
-    document.getElementById("img6"),
+   document.getElementById("img1"),
+  document.getElementById("img2"),
+  document.getElementById("img3"),
+  document.getElementById("img4"),
+  document.getElementById("img5"),
+  document.getElementById("img6"),
   ];
   DRIVE_FILE_IDS.forEach((id, i) => {
     if(imgEls[i]) imgEls[i].src = driveSrc(id);
@@ -1839,3 +1839,4 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
