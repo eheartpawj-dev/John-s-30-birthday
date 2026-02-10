@@ -1198,10 +1198,7 @@ Eti 💘
               </div>
             </div>
 
-            <div class="specialText">
-              <b>Tip:</b> If any image doesn’t load, it means that specific file isn’t shared publicly.
-              Open it in Drive → Share → “Anyone with the link” → Viewer.
-            </div>
+          
           </div>
         </div>
       </div>
@@ -1213,29 +1210,27 @@ Eti 💘
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
 
-  // Your Google Drive FILE IDs (from the links you sent)
-  const DRIVE_FILE_IDS = [
-    "pics-for-bd/1.jpg",
-  "pics-for-bd/2.jpg",
-  "pics-for-bd/3.jpg",
-  "pics-for-bd/4.jpg",
-  "pics-for-bd/5.jpg",
-  "pics-for-bd/6.jpg"
-  ];
-  const driveSrc = (id) => `https://drive.google.com/uc?export=view&id=${encodeURIComponent(id)}`;
+const IMAGES = [
+  "pics-for-bd/1.JPG",
+  "pics-for-bd/2.JPG",
+  "pics-for-bd/3.JPG",
+  "pics-for-bd/8.JPG",
+  "pics-for-bd/9.JPG",
+  "pics-for-bd/10.JPG"
+];
 
-  // Put Drive images into the gallery
-  const imgEls = [
-   document.getElementById("img1"),
+const imgEls = [
+  document.getElementById("img1"),
   document.getElementById("img2"),
   document.getElementById("img3"),
   document.getElementById("img4"),
   document.getElementById("img5"),
-  document.getElementById("img6"),
-  ];
-  DRIVE_FILE_IDS.forEach((id, i) => {
-    if(imgEls[i]) imgEls[i].src = driveSrc(id);
-  });
+  document.getElementById("img6")
+];
+
+IMAGES.forEach((src, i) => {
+  if (imgEls[i]) imgEls[i].src = src;
+});
 
   // Update secret overlay big text (what shows BIG when YES is pressed)
   const secretTitle = document.getElementById("secretTitle");
@@ -1839,4 +1834,5 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
