@@ -1293,10 +1293,14 @@ Eti 💘
 
 window.addEventListener("DOMContentLoaded", () => {
   bgAudio = document.getElementById("bgAudio");
+
+  if (bgAudio) {
+    bgAudio.addEventListener("error", () => {
+      showToast("<b>Audio error:</b> couldn't load the mp3. Check path/name.", 6000);
+    });
+  }
 });
-bgAudio.addEventListener("error", () => {
-  showToast("<b>Audio error:</b> couldn't load the mp3. Check path/name.", 6000);
-});
+
 
 const IMAGES = [
   "pics-for-bd/1.JPG",
@@ -1964,6 +1968,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
