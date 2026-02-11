@@ -1281,6 +1281,9 @@ Eti 💘
     </div>
   </div>
 </div>
+    <audio id="bgAudio" preload="auto" loop playsinline>
+  <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
+</audio>
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
@@ -1418,58 +1421,7 @@ IMAGES.forEach((src, i) => {
 
   const musicBtn = document.getElementById('musicBtn');
 
-  function startMusic(){
-    if(audioOn) return;
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    master = ac.createGain();
-    master.gain.value = 0.0;
-    master.connect(ac.destination);
 
-    oscA = ac.createOscillator();
-    oscB = ac.createOscillator();
-    oscA.type = "sine";
-    oscB.type = "triangle";
-    oscA.frequency.value = 220;
-    oscB.frequency.value = 277.18;
-
-    const gA = ac.createGain();
-    const gB = ac.createGain();
-    gA.gain.value = 0.22;
-    gB.gain.value = 0.18;
-
-    lfo = ac.createOscillator();
-    lfoGain = ac.createGain();
-    lfo.type = "sine";
-    lfo.frequency.value = 0.12;
-    lfoGain.gain.value = 18;
-
-    lfo.connect(lfoGain);
-    lfoGain.connect(oscB.frequency);
-
-    oscA.connect(gA); oscB.connect(gB);
-    gA.connect(master); gB.connect(master);
-
-    oscA.start(); oscB.start(); lfo.start();
-    master.gain.setTargetAtTime(0.24, ac.currentTime, 0.35);
-
-    const chords = [
-      [220, 277.18],
-      [196, 246.94],
-      [174.61, 220],
-      [196, 246.94],
-    ];
-    let idx = 0;
-    timer = setInterval(()=>{
-      if(!audioOn) return;
-      const [f1,f2] = chords[idx % chords.length];
-      oscA.frequency.setTargetAtTime(f1, ac.currentTime, 0.12);
-      oscB.frequency.setTargetAtTime(f2, ac.currentTime, 0.12);
-      idx++;
-    }, 3000);
-
-    audioOn = true;
-    updateMusicBtn();
-  }
 
   function stopMusic(){
     if(!audioOn) return;
@@ -1481,7 +1433,7 @@ IMAGES.forEach((src, i) => {
   }
 
   function toggleMusic(){
-    if(!audioOn) startMusic();
+    if(!audioOn) tryPlayBgAudio();
     else stopMusic();
   }
 
@@ -1495,7 +1447,7 @@ IMAGES.forEach((src, i) => {
 
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
-    startMusic();
+    tryPlayBgAudio();
     confettiBurst(1.2);
     setTimeout(()=>confettiBurst(0.7), 220);
     showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
@@ -1696,7 +1648,7 @@ I Love You, Eti 💘`;
   document.addEventListener('keydown', (e)=>{ if(e.key === "Escape" && overlay.classList.contains('show')) closeModal(); });
 
   yesBtn.addEventListener('click', ()=>{
-    startMusic();
+    tryPlayBgAudio();
     runSecretYes();
     setTimeout(()=>{
       openModal();
@@ -1911,14 +1863,11 @@ I Love You, Eti 💘`;
       }
     });
   }
+
 </script>
-<audio id="bgAudio" preload="auto" loop playsinline>
-  <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
-</audio>
-
-
 </body>
 </html>
+
 
 
 
