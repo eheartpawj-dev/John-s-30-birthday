@@ -747,42 +747,6 @@
       to  { transform: translateX(-50%) scale(1.10) rotate(2deg); opacity:1; }
     }
 
-    /* 3D "30" on cake */
-    .cakeNumber{
-      position:absolute;
-      left: 50%;
-      top: 50px;
-      transform: translateX(-50%) translateZ(140px);
-      font-size: 74px;
-      font-weight: 1200;
-      letter-spacing: -6px;
-      line-height: 1;
-      z-index: 4;
-      pointer-events:none;
-      color: rgba(255,246,251,.98);
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.10),
-        0 10px 26px rgba(0,0,0,.35),
-        0 0 34px rgba(255,61,110,.32);
-      filter: drop-shadow(0 14px 18px rgba(0,0,0,.35));
-    }
-    .cakeNumber:before{
-      content:"30";
-      position:absolute;
-      left: 3px; top: 3px;
-      color: rgba(0,0,0,.12);
-      filter: blur(.2px);
-      z-index:-1;
-    }
-    .cakeNumber:after{
-      content:"30";
-      position:absolute;
-      left: -2px; top: -2px;
-      color: rgba(255,215,168,.62);
-      mix-blend-mode: screen;
-      z-index:-2;
-    }
-
     /* Floating emojis inside stage */
     .float{
       position:absolute; bottom:-60px;
@@ -1849,6 +1813,7 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
 
 
