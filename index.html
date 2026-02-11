@@ -1284,7 +1284,7 @@ Eti 💘
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
-
+const bgAudio = document.getElementById("bgAudio");
 const IMAGES = [
   "pics-for-bd/1.JPG",
   "pics-for-bd/2.JPG",
@@ -1628,17 +1628,18 @@ updateMusicBtnMp3();
   const screenNote    = document.getElementById('screen-note');
   const screenGallery = document.getElementById('screen-gallery');
 // ---- Background audio file (auto-play with fallback) ----
-const bgAudio = document.getElementById("bgAudio");
+// const bgAudio = document.getElementById("bgAudio");
 
 function tryPlayBgAudio(){
   if(!bgAudio) return;
   bgAudio.volume = 0.65;
 
-  const p = bgAudio.play();
-  if(p && typeof p.catch === "function"){
-    p.catch(() => {
-      // Autoplay blocked on mobile — will start on first user interaction
-    });
+   const p = bgAudio.play();
+  if(p && typeof p.then === "function"){
+    p.then(()=>{
+      mp3On = true;
+      updateMusicBtnMp3();
+    }).catch(()=>{});
   }
 }
 
@@ -1954,6 +1955,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
