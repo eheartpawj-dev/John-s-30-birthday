@@ -1491,12 +1491,19 @@ IMAGES.forEach((src, i) => {
 
   const splashLine = `For ${NAME_HIM}. From ${NAME_YOU}. Feb 13–14, 2026. 💘`;
   let ti=0;
-  function typeSplash(){
-    typeText.textContent = splashLine.slice(0, ti++);
-    if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
+  // function typeSplash(){
+  //   typeText.textContent = splashLine.slice(0, ti++);
+  //   if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
+  // }
+  // typeSplash();
+function typeSplash(){
+  typeText.textContent = splashLine.slice(0, ti++);
+  if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
+  else {
+    startBtn.disabled = false; // Enable button after typing
   }
+}
   typeSplash();
-
   // // ---- Music (romantic loop) ----
   // let audioOn = false;
   // let ac = null, master = null, oscA = null, oscB = null, lfo = null, lfoGain = null, timer = null;
@@ -2038,6 +2045,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
