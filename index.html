@@ -1290,16 +1290,29 @@ Eti 💘
   const NAME_YOU = "Eti";
 const bgAudio = document.getElementById("bgAudio");
     async function playMp3() {
-    if (!bgAudio) return;
-    bgAudio.volume = 0.65;
-    try {
-      await bgAudio.play();
-      mp3On = true;
-      updateMusicBtnMp3(); // Update button
-    } catch (e) {
-      showToast("Audio cannot be played automatically. Click to start.", 5000);
-    }
+  //   if (!bgAudio) return;
+  //   bgAudio.volume = 0.65;
+  //   try {
+  //     await bgAudio.play();
+  //     mp3On = true;
+  //     updateMusicBtnMp3(); // Update button
+  //   } catch (e) {
+  //     showToast("Audio cannot be played automatically. Click to start.", 5000);
+  //   }
+  // }
+      async function tryPlayBgAudio() {
+  if (!bgAudio) return;
+  bgAudio.volume = 0.65;
+  try {
+    await bgAudio.play();
+    mp3On = true;
+    updateMusicBtnMp3();
+  } catch (e) {
+    console.log("Audio playback failed:", e);
+    showToast("Click to start audio.", 5000); // Ask for user interaction
   }
+}
+
 
   function stopMp3() {
     if (!bgAudio) return;
@@ -1309,13 +1322,18 @@ const bgAudio = document.getElementById("bgAudio");
   }
 
   const musicBtn = document.getElementById('musicBtn');
-  let mp3On = false;
+const bgAudio = document.getElementById('bgAudio');
 
-  musicBtn.addEventListener('click', async () => {
-    if (!mp3On) await playMp3();
-    else stopMp3();
-    confettiBurst(0.5);
-  });
+// When the user clicks the button, toggle music
+musicBtn.addEventListener('click', () => {
+  if (!bgAudio.paused) {
+    bgAudio.pause();  // Pause audio
+    musicBtn.textContent = "🔊 Music: OFF";  // Change button text to indicate it's off
+  } else {
+    bgAudio.play();  // Play audio
+    musicBtn.textContent = "🔇 Music: ON";  // Change button text to indicate it's on
+  }
+});
 
   function updateMusicBtnMp3(){
     musicBtn.textContent = mp3On ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
@@ -1579,7 +1597,8 @@ function updateMusicBtnMp3(){
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
     // startMusic();
-    playMp3();
+    // playMp3();
+     tryPlayBgAudio();
     confettiBurst(1.2);
     setTimeout(()=>confettiBurst(0.7), 220);
     showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
@@ -1782,7 +1801,8 @@ I Love You, Eti 💘`;
 
   yesBtn.addEventListener('click', ()=>{
     // startMusic();
-    playMp3();
+    // playMp3();
+ tryPlayBgAudio();
     runSecretYes();
     setTimeout(()=>{
       openModal();
@@ -2001,6 +2021,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
