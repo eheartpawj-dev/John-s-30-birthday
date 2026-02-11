@@ -352,14 +352,35 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
     }
 
-    .bigHeart{
+    /* .bigHeart{
       width: min(380px, 70vw);
       aspect-ratio: 1 / 1;
       position: relative;
       transform: translateY(8px) scale(.86);
       animation: heartIn .8s cubic-bezier(.2,1,.25,1) forwards, pulse 1.05s ease-in-out infinite;
       filter: drop-shadow(0 26px 70px rgba(0,0,0,.5));
-    }
+    } */
+    .bigHeart {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  background: linear-gradient(135deg, #ff61a6 50%, #ff3d5e 50%); /* צורת לב באמצעות גרדיאנט */
+  clip-path: polygon(50% 0%, 0% 35%, 50% 100%, 100% 35%); /* הצורה של הלב */
+  animation: heartIn .8s cubic-bezier(.2, 1, .25, 1) forwards, pulse 1.05s ease-in-out infinite;
+  filter: drop-shadow(0 26px 70px rgba(0, 0, 0, .5));
+  transform: translateY(8px) scale(1);
+  margin: auto;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
     @keyframes heartIn{
       0%{ transform: translateY(16px) scale(.75); opacity:0; }
       65%{ transform: translateY(-6px) scale(1.05); opacity:1; }
@@ -1333,7 +1354,7 @@ IMAGES.forEach((src, i) => {
 
   // ---- Toast ----
   const toast = document.getElementById('toast');
-  function showToast(msg, ms=6000){
+  function showToast(msg, ms=10000){
     toast.innerHTML = msg;
     toast.classList.add('show');
     clearTimeout(showToast._t);
@@ -1967,6 +1988,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
