@@ -1290,6 +1290,7 @@ Eti 💘
   const NAME_YOU = "Eti";
 let mp3On = false;  // משתנה לבדיקת מצב האודיו
 const bgAudio = document.getElementById('bgAudio');
+  const musicBtn = document.getElementById('musicBtn');
 
 async function tryPlayBgAudio() {
   if (!bgAudio) return;  // לוודא שקיימת תגית אודיו
@@ -1338,7 +1339,7 @@ async function tryPlayBgAudio() {
   }
 
   const musicBtn = document.getElementById('musicBtn');
-const bgAudio = document.getElementById('bgAudio');
+// const bgAudio = document.getElementById('bgAudio');
 
 // When the user clicks the button, toggle music
 musicBtn.addEventListener('click', () => {
@@ -1715,18 +1716,18 @@ function updateMusicBtnMp3(){
 // ---- Background audio file (auto-play with fallback) ----
 // const bgAudio = document.getElementById("bgAudio");
 
-function tryPlayBgAudio(){
-  if(!bgAudio) return;
-  bgAudio.volume = 0.65;
+// function tryPlayBgAudio(){
+//   if(!bgAudio) return;
+//   bgAudio.volume = 0.65;
 
-   const p = bgAudio.play();
-  if(p && typeof p.then === "function"){
-    p.then(()=>{
-      mp3On = true;
-      updateMusicBtnMp3();
-    }).catch(()=>{});
-  }
-}
+//    const p = bgAudio.play();
+//   if(p && typeof p.then === "function"){
+//     p.then(()=>{
+//       mp3On = true;
+//       updateMusicBtnMp3();
+//     }).catch(()=>{});
+//   }
+// }
 
 // try immediately when page loads
 window.addEventListener("load", tryPlayBgAudio);
@@ -2037,6 +2038,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
