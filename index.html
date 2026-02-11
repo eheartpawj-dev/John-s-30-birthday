@@ -1288,8 +1288,24 @@ Eti 💘
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
-const bgAudio = document.getElementById("bgAudio");
-    async function playMp3() {
+let mp3On = false;  // משתנה לבדיקת מצב האודיו
+const bgAudio = document.getElementById('bgAudio');
+
+async function tryPlayBgAudio() {
+  if (!bgAudio) return;  // לוודא שקיימת תגית אודיו
+  bgAudio.volume = 0.65;
+
+  try {
+    await bgAudio.play();  // ניסיון להפעיל את האודיו
+    mp3On = true;
+    updateMusicBtnMp3();  // עדכון כפתור המוזיקה (שינוי טקסט הכפתור)
+  } catch (e) {
+    console.log("Audio playback failed:", e);
+    showToast("Click to start audio.", 5000); // הודעת טעות במקרה של כשלון
+  }
+}
+
+    // async function playMp3() {
   //   if (!bgAudio) return;
   //   bgAudio.volume = 0.65;
   //   try {
@@ -1300,18 +1316,18 @@ const bgAudio = document.getElementById("bgAudio");
   //     showToast("Audio cannot be played automatically. Click to start.", 5000);
   //   }
   // }
-      async function tryPlayBgAudio() {
-  if (!bgAudio) return;
-  bgAudio.volume = 0.65;
-  try {
-    await bgAudio.play();
-    mp3On = true;
-    updateMusicBtnMp3();
-  } catch (e) {
-    console.log("Audio playback failed:", e);
-    showToast("Click to start audio.", 5000); // Ask for user interaction
-  }
-}
+//       async function tryPlayBgAudio() {
+//   if (!bgAudio) return;
+//   bgAudio.volume = 0.65;
+//   try {
+//     await bgAudio.play();
+//     mp3On = true;
+//     updateMusicBtnMp3();
+//   } catch (e) {
+//     console.log("Audio playback failed:", e);
+//     showToast("Click to start audio.", 5000); // Ask for user interaction
+//   }
+// }
 
 
   function stopMp3() {
@@ -2021,6 +2037,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
