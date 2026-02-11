@@ -812,7 +812,7 @@ body{
   }
 
   button{
-    width: 100%;
+    width: auto;
   }
 
   .tabLeft{ width: 100%; }
@@ -830,6 +830,26 @@ body{
   .photo3d img{
      height: 320px;
     object-fit: contain;
+  }
+   /* הכפתור YES קטן יותר */
+  .yes{
+    padding: 11px 14px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  /* שורת הכפתורים נשארת מסודרת */
+  .btnRow{
+    gap: 10px;
+    padding-bottom: 14px;
+    min-height: 52px;
+  }
+
+  /* ה-NO נשאר בתוך הכרטיס ולא עולה על YES */
+  .no{
+    padding: 11px 14px;
+    font-size: 14px;
+    border-radius: 12px;
   }
 }
 
@@ -1000,13 +1020,11 @@ body{
 
         <div style="display:flex; gap:10px; align-items:center; position:relative; z-index:2;">
           <button class="tabBtn" id="bdayBtn" type="button">▶ Play Birthday Song 🎶</button>
-          <button class="tabBtn" id="audioPickBtn" type="button">🎵 Choose Birthday Audio</button>
           <button class="close" id="closeBtn" type="button">Close ✖</button>
         </div>
       </div>
 
       <!-- hidden file input for picking an audio file -->
-      <input id="audioFile" type="file" accept="audio/*" style="display:none" />
       <div class="modalContent">
 
       <!-- chooser -->
@@ -1575,6 +1593,32 @@ IMAGES.forEach((src, i) => {
   const screenInvite  = document.getElementById('screen-invite');
   const screenNote    = document.getElementById('screen-note');
   const screenGallery = document.getElementById('screen-gallery');
+// ---- Background audio file (auto-play with fallback) ----
+const bgAudio = document.getElementById("bgAudio");
+
+function tryPlayBgAudio(){
+  if(!bgAudio) return;
+  bgAudio.volume = 0.65;
+
+  const p = bgAudio.play();
+  if(p && typeof p.catch === "function"){
+    p.catch(() => {
+      // Autoplay blocked on mobile — will start on first user interaction
+    });
+  }
+}
+
+// try immediately when page loads
+window.addEventListener("load", tryPlayBgAudio);
+
+// start on first touch/click anywhere (fallback)
+function unlockAudioOnce(){
+  tryPlayBgAudio();
+  window.removeEventListener("touchstart", unlockAudioOnce);
+  window.removeEventListener("click", unlockAudioOnce);
+}
+window.addEventListener("touchstart", unlockAudioOnce, {passive:true});
+window.addEventListener("click", unlockAudioOnce);
 
   // Live message: re-types whenever Invite opens
   let inviteTypingTimer = null;
@@ -1867,30 +1911,14 @@ I Love You, Eti 💘`;
       }
     });
   }
-
-  // Choose your own birthday audio (optional)
-  const audioPickBtn = document.getElementById('audioPickBtn');
-  const audioFile = document.getElementById('audioFile');
-  const customAudio = new Audio();
-  customAudio.loop = true;
-
-  audioPickBtn.addEventListener('click', ()=>{
-    audioFile.click();
-  });
-
-  audioFile.addEventListener('change', ()=>{
-    const file = audioFile.files && audioFile.files[0];
-    if(!file) return;
-    const url = URL.createObjectURL(file);
-    customAudio.src = url;
-    customAudio.volume = 0.6;
-    customAudio.play().catch(()=>{});
-    showToast("Custom birthday audio loaded 🎵 (playing in the background)", 3800);
-    confettiBurst(0.7);
-  });
 </script>
+  <audio id="bgAudio" preload="auto" loop playsinline>
+  <source src="pics-for-bd/birthday.mp3" type="audio/mpeg" />
+</audio>
+
 </body>
 </html>
+
 
 
 
