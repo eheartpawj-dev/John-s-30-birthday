@@ -1412,90 +1412,124 @@ IMAGES.forEach((src, i) => {
   }
   typeSplash();
 
-  // ---- Music (romantic loop) ----
-  let audioOn = false;
-  let ac = null, master = null, oscA = null, oscB = null, lfo = null, lfoGain = null, timer = null;
+  // // ---- Music (romantic loop) ----
+  // let audioOn = false;
+  // let ac = null, master = null, oscA = null, oscB = null, lfo = null, lfoGain = null, timer = null;
 
-  const musicBtn = document.getElementById('musicBtn');
+  // const musicBtn = document.getElementById('musicBtn');
 
-  function startMusic(){
-    if(audioOn) return;
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    master = ac.createGain();
-    master.gain.value = 0.0;
-    master.connect(ac.destination);
+  // function startMusic(){
+  //   if(audioOn) return;
+  //   ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  //   master = ac.createGain();
+  //   master.gain.value = 0.0;
+  //   master.connect(ac.destination);
 
-    oscA = ac.createOscillator();
-    oscB = ac.createOscillator();
-    oscA.type = "sine";
-    oscB.type = "triangle";
-    oscA.frequency.value = 220;
-    oscB.frequency.value = 277.18;
+  //   oscA = ac.createOscillator();
+  //   oscB = ac.createOscillator();
+  //   oscA.type = "sine";
+  //   oscB.type = "triangle";
+  //   oscA.frequency.value = 220;
+  //   oscB.frequency.value = 277.18;
 
-    const gA = ac.createGain();
-    const gB = ac.createGain();
-    gA.gain.value = 0.22;
-    gB.gain.value = 0.18;
+  //   const gA = ac.createGain();
+  //   const gB = ac.createGain();
+  //   gA.gain.value = 0.22;
+  //   gB.gain.value = 0.18;
 
-    lfo = ac.createOscillator();
-    lfoGain = ac.createGain();
-    lfo.type = "sine";
-    lfo.frequency.value = 0.12;
-    lfoGain.gain.value = 18;
+  //   lfo = ac.createOscillator();
+  //   lfoGain = ac.createGain();
+  //   lfo.type = "sine";
+  //   lfo.frequency.value = 0.12;
+  //   lfoGain.gain.value = 18;
 
-    lfo.connect(lfoGain);
-    lfoGain.connect(oscB.frequency);
+  //   lfo.connect(lfoGain);
+  //   lfoGain.connect(oscB.frequency);
 
-    oscA.connect(gA); oscB.connect(gB);
-    gA.connect(master); gB.connect(master);
+  //   oscA.connect(gA); oscB.connect(gB);
+  //   gA.connect(master); gB.connect(master);
 
-    oscA.start(); oscB.start(); lfo.start();
-    master.gain.setTargetAtTime(0.24, ac.currentTime, 0.35);
+  //   oscA.start(); oscB.start(); lfo.start();
+  //   master.gain.setTargetAtTime(0.24, ac.currentTime, 0.35);
 
-    const chords = [
-      [220, 277.18],
-      [196, 246.94],
-      [174.61, 220],
-      [196, 246.94],
-    ];
-    let idx = 0;
-    timer = setInterval(()=>{
-      if(!audioOn) return;
-      const [f1,f2] = chords[idx % chords.length];
-      oscA.frequency.setTargetAtTime(f1, ac.currentTime, 0.12);
-      oscB.frequency.setTargetAtTime(f2, ac.currentTime, 0.12);
-      idx++;
-    }, 3000);
+  //   const chords = [
+  //     [220, 277.18],
+  //     [196, 246.94],
+  //     [174.61, 220],
+  //     [196, 246.94],
+  //   ];
+  //   let idx = 0;
+  //   timer = setInterval(()=>{
+  //     if(!audioOn) return;
+  //     const [f1,f2] = chords[idx % chords.length];
+  //     oscA.frequency.setTargetAtTime(f1, ac.currentTime, 0.12);
+  //     oscB.frequency.setTargetAtTime(f2, ac.currentTime, 0.12);
+  //     idx++;
+  //   }, 3000);
 
-    audioOn = true;
-    updateMusicBtn();
+  //   audioOn = true;
+  //   updateMusicBtn();
+  // }
+
+  // function stopMusic(){
+  //   if(!audioOn) return;
+  //   audioOn = false;
+  //   if(master) master.gain.setTargetAtTime(0.0, ac.currentTime, 0.18);
+  //   if(timer) clearInterval(timer);
+  //   timer = null;
+  //   updateMusicBtn();
+  // }
+
+  // function toggleMusic(){
+  //   if(!audioOn) startMusic();
+  //   else stopMusic();
+  // }
+
+  // function updateMusicBtn(){
+  //   musicBtn.textContent = audioOn ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
+  // }
+  // musicBtn.addEventListener('click', ()=>{
+  //   toggleMusic();
+  //   confettiBurst(0.5);
+  // });
+  
+const musicBtn = document.getElementById('musicBtn');
+let mp3On = false;
+
+function updateMusicBtnMp3(){
+  musicBtn.textContent = mp3On ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
+}
+
+async function playMp3(){
+  if(!bgAudio) return;
+  bgAudio.volume = 0.65;
+  try{
+    await bgAudio.play();
+    mp3On = true;
+    updateMusicBtnMp3();
+  }catch(e){
+    // autoplay blocked until user gesture
   }
+}
 
-  function stopMusic(){
-    if(!audioOn) return;
-    audioOn = false;
-    if(master) master.gain.setTargetAtTime(0.0, ac.currentTime, 0.18);
-    if(timer) clearInterval(timer);
-    timer = null;
-    updateMusicBtn();
-  }
+function stopMp3(){
+  if(!bgAudio) return;
+  bgAudio.pause();
+  mp3On = false;
+  updateMusicBtnMp3();
+}
 
-  function toggleMusic(){
-    if(!audioOn) startMusic();
-    else stopMusic();
-  }
-
-  function updateMusicBtn(){
-    musicBtn.textContent = audioOn ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
-  }
-  musicBtn.addEventListener('click', ()=>{
-    toggleMusic();
-    confettiBurst(0.5);
-  });
+musicBtn.addEventListener('click', async ()=>{
+  if(!mp3On) await playMp3();
+  else stopMp3();
+  confettiBurst(0.5);
+});
+updateMusicBtnMp3();
 
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
-    startMusic();
+    // startMusic();
+    playMp3();
     confettiBurst(1.2);
     setTimeout(()=>confettiBurst(0.7), 220);
     showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
@@ -1696,7 +1730,8 @@ I Love You, Eti 💘`;
   document.addEventListener('keydown', (e)=>{ if(e.key === "Escape" && overlay.classList.contains('show')) closeModal(); });
 
   yesBtn.addEventListener('click', ()=>{
-    startMusic();
+    // startMusic();
+    playMp3();
     runSecretYes();
     setTimeout(()=>{
       openModal();
@@ -1828,89 +1863,89 @@ I Love You, Eti 💘`;
     floatTimer = setInterval(spawnFloat, 520);
   }
 
-  // ---- Birthday Song (built-in tones) + pick your own audio ----
-  let bdayPlaying = false;
-  let bdayTimer = null;
+  // // ---- Birthday Song (built-in tones) + pick your own audio ----
+  // let bdayPlaying = false;
+  // let bdayTimer = null;
 
-  function playTone(freq, durMs, when=0){
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.type = "sine";
-    o.frequency.value = freq;
+  // function playTone(freq, durMs, when=0){
+  //   ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  //   const o = ac.createOscillator();
+  //   const g = ac.createGain();
+  //   o.type = "sine";
+  //   o.frequency.value = freq;
 
-    g.gain.value = 0.0001;
-    o.connect(g);
-    g.connect(ac.destination);
+  //   g.gain.value = 0.0001;
+  //   o.connect(g);
+  //   g.connect(ac.destination);
 
-    const t0 = ac.currentTime + when;
-    const t1 = t0 + durMs/1000;
+  //   const t0 = ac.currentTime + when;
+  //   const t1 = t0 + durMs/1000;
 
-    g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t1);
+  //   g.gain.setValueAtTime(0.0001, t0);
+  //   g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
+  //   g.gain.exponentialRampToValueAtTime(0.0001, t1);
 
-    o.start(t0);
-    o.stop(t1 + 0.02);
-  }
+  //   o.start(t0);
+  //   o.stop(t1 + 0.02);
+  // }
 
-  function playBirthdaySong(){
-    const notes = [
-      264,264,297,264,352,330,
-      264,264,297,264,396,352,
-      264,264,528,440,352,330,297,
-      466,466,440,352,396,352
-    ];
-    const durs = [
-      280,280,560,560,560,1100,
-      280,280,560,560,560,1100,
-      280,280,560,560,560,560,1100,
-      280,280,560,560,560,1100
-    ];
+  // function playBirthdaySong(){
+  //   const notes = [
+  //     264,264,297,264,352,330,
+  //     264,264,297,264,396,352,
+  //     264,264,528,440,352,330,297,
+  //     466,466,440,352,396,352
+  //   ];
+  //   const durs = [
+  //     280,280,560,560,560,1100,
+  //     280,280,560,560,560,1100,
+  //     280,280,560,560,560,560,1100,
+  //     280,280,560,560,560,1100
+  //   ];
 
-    let offset = 0;
-    for(let i=0;i<notes.length;i++){
-      playTone(notes[i], durs[i], offset/1000);
-      offset += durs[i];
-    }
+  //   let offset = 0;
+  //   for(let i=0;i<notes.length;i++){
+  //     playTone(notes[i], durs[i], offset/1000);
+  //     offset += durs[i];
+  //   }
 
-    bdayTimer = setTimeout(()=>{
-      bdayPlaying = false;
-      updateBdayBtn();
-    }, offset + 200);
-  }
+  //   bdayTimer = setTimeout(()=>{
+  //     bdayPlaying = false;
+  //     updateBdayBtn();
+  //   }, offset + 200);
+  // }
 
-  function stopBirthdaySong(){
-    if(bdayTimer) clearTimeout(bdayTimer);
-    bdayTimer = null;
-    bdayPlaying = false;
-    updateBdayBtn();
-  }
+  // function stopBirthdaySong(){
+  //   if(bdayTimer) clearTimeout(bdayTimer);
+  //   bdayTimer = null;
+  //   bdayPlaying = false;
+  //   updateBdayBtn();
+  // }
 
-  const bdayBtn = document.getElementById('bdayBtn');
-  function updateBdayBtn(){
-    if(!bdayBtn) return;
-    bdayBtn.textContent = bdayPlaying ? "⏸ Stop Birthday Song" : "▶ Play Birthday Song 🎶";
-  }
+  // const bdayBtn = document.getElementById('bdayBtn');
+  // function updateBdayBtn(){
+  //   if(!bdayBtn) return;
+  //   bdayBtn.textContent = bdayPlaying ? "⏸ Stop Birthday Song" : "▶ Play Birthday Song 🎶";
+  // }
 
-  if(bdayBtn){
-    updateBdayBtn();
-    bdayBtn.addEventListener('click', ()=>{
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-      if(ac.state === "suspended") ac.resume();
+  // if(bdayBtn){
+  //   updateBdayBtn();
+  //   bdayBtn.addEventListener('click', ()=>{
+  //     ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  //     if(ac.state === "suspended") ac.resume();
 
-      if(!bdayPlaying){
-        bdayPlaying = true;
-        updateBdayBtn();
-        playBirthdaySong();
-        confettiBurst(0.8);
-        showToast(`Happy birthday, my man 🎂💘`, 3600);
-      }else{
-        stopBirthdaySong();
-        showToast(`Okay okay… saving the vocals for Niagara 😌`, 3200);
-      }
-    });
-  }
+  //     if(!bdayPlaying){
+  //       bdayPlaying = true;
+  //       updateBdayBtn();
+  //       playBirthdaySong();
+  //       confettiBurst(0.8);
+  //       showToast(`Happy birthday, my man 🎂💘`, 3600);
+  //     }else{
+  //       stopBirthdaySong();
+  //       showToast(`Okay okay… saving the vocals for Niagara 😌`, 3200);
+  //     }
+  //   });
+  // }
 </script>
 <audio id="bgAudio" preload="auto" loop playsinline>
   <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
@@ -1919,6 +1954,7 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
+
 
 
 
