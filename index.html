@@ -422,7 +422,6 @@
     .modal{
       width:min(1100px, 100%);
       max-height: 88vh;
-      overflow:auto;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border: 1px solid rgba(255,255,255,.16);
@@ -700,54 +699,7 @@
       font-weight: 950;
       line-height: 1.7;
     }
-
-    /* BIG 3D Cake moved to TOP so it never hides photos */
-    .cakeWrap{
-      position:absolute;
-      left: 50%;
-      top: 10px;
-      transform: translateX(-50%);
-      z-index: 5; /* below photos (6) but up top */
-      filter: drop-shadow(0 30px 40px rgba(0,0,0,.55));
-      animation: cakeBounce 1.18s ease-in-out infinite;
-      transform-style: preserve-3d;
-      pointer-events:none;
-    }
-    @keyframes cakeBounce{ 0%,100%{ transform: translateX(-50%) translateY(0);} 50%{ transform: translateX(-50%) translateY(-10px);} }
-
-    .cake{
-      width: 280px; height: 160px;
-      border-radius: 22px 22px 30px 30px;
-      background: linear-gradient(180deg, rgba(255,215,168,.98), rgba(251,191,36,.92));
-      border:1px solid rgba(255,255,255,.16);
-      position:relative;
-      overflow:hidden;
-      transform: translateZ(90px);
-      box-shadow: 0 24px 70px rgba(0,0,0,.45);
-    }
-    .cake:before{
-      content:"";
-      position:absolute; inset: -20px -28px auto -28px;
-      height: 72px;
-      border-radius: 30px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,246,251,.98), rgba(255,246,251,.88));
-      border: 1px solid rgba(0,0,0,.06);
-      transform: translateZ(20px);
-      box-shadow: inset 0 -12px 26px rgba(0,0,0,.10);
-    }
-    .cake:after{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        radial-gradient(420px 220px at 20% 20%, rgba(255,61,110,.22), transparent 65%),
-        radial-gradient(520px 260px at 85% 40%, rgba(255,246,251,.14), transparent 66%),
-        linear-gradient(90deg, rgba(0,0,0,.14), transparent 25%, transparent 75%, rgba(0,0,0,.16));
-      opacity:.85;
-      pointer-events:none;
-      transform: translateZ(14px);
-      mix-blend-mode: screen;
-    }
-
+    
     .sprinkles{
       position:absolute; inset: 0;
       background:
@@ -845,6 +797,82 @@
       10%{ opacity:1; }
       100%{ transform: translateY(-720px) translateX(26px) rotate(16deg); opacity:0; }
     }
+    /* allow vertical scroll on the page */
+body{
+  overflow-x: hidden;
+  overflow-y: auto; /* instead of hidden */
+}
+
+/* Make modal a column layout: header fixed, content scrolls */
+.modal{
+  display: flex;
+  flex-direction: column;
+  max-height: 92vh;
+  overflow: hidden; /* keep effects clipped */
+}
+
+/* scrollable content area inside modal */
+.modalContent{
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+}
+
+/* Mobile improvements */
+@media (max-width: 640px){
+  body{ padding: 12px; }
+  .card{ padding: 18px; }
+  .btnRow{ padding-bottom: 18px; }
+
+  .overlay{ padding: 12px; }
+
+  .modal{
+    width: 100%;
+    max-height: 94vh;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .modalHeader{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .modalHeader > div:last-child{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  button{
+    width: 100%;
+  }
+
+  .tabLeft{ width: 100%; }
+  .tabsRow{ gap: 8px; }
+
+  .romanticStage{
+    min-height: 520px;
+  }
+
+  .photoRack{
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .photo3d img{
+    height: 200px;
+  }
+}
+
+/* Invite: stack the 2-column plan layout on smaller screens */
+@media (max-width: 820px){
+  #screen-invite .panel > div[style*="grid-template-columns"]{
+    grid-template-columns: 1fr !important;
+  }
+}
   </style>
 </head>
 
@@ -936,6 +964,7 @@
 
       <!-- hidden file input for picking an audio file -->
       <input id="audioFile" type="file" accept="audio/*" style="display:none" />
+      <div class="modalContent">
 
       <!-- chooser -->
       <div class="screen active" id="screen-chooser">
@@ -1003,7 +1032,7 @@
             <div class="panel" style="background: rgba(0,0,0,.18);">
               <h3 style="margin:0 0 8px;">What to bring</h3>
               <ul>
- 		<liA warm jacket - Niagara has a presence.</li>
+ 		<li>A warm jacket - Niagara has a presence.</li>
                  <li>Comfortable shoes you can actually enjoy the day in.</li>
                 <li>A clean daytime look + a sharp evening outfit.</li>
                 <li>Your energy - confidence is part of the outfit. 😌</li>
@@ -1174,20 +1203,6 @@ Eti 💘
                 <div class="layer vignette" id="layer4"></div>
               </div>
 
-              <!-- cake TOP -->
-              <div class="cakeWrap" aria-hidden="true">
-                <div class="candles">
-                  <div class="candle"><div class="flame"></div></div>
-                  <div class="candle"><div class="flame"></div></div>
-                  <div class="candle"><div class="flame"></div></div>
-                  <div class="candle"><div class="flame"></div></div>
-                </div>
-                <div class="cake">
-                  <div class="sprinkles"></div>
-                  <div class="cakeNumber" aria-hidden="true">30</div>
-                </div>
-              </div>
-
               <div class="photoRack" id="photoRack">
                 <div class="photo3d" data-tilt data-cap="1"><img id="img1" alt="Photo 1"><div class="shine"></div><div class="photoCap" id="cap1">Eti & John 💘</div></div>
                 <div class="photo3d" data-tilt data-cap="2"><img id="img2" alt="Photo 2"><div class="shine"></div><div class="photoCap" id="cap2">My love ✨</div></div>
@@ -1205,7 +1220,7 @@ Eti 💘
 
     </div>
   </div>
-
+</div>
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
@@ -1834,5 +1849,6 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
 
