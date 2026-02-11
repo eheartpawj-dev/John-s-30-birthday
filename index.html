@@ -1281,9 +1281,6 @@ Eti 💘
     </div>
   </div>
 </div>
-    <audio id="bgAudio" preload="auto" loop playsinline>
-  <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
-</audio>
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
@@ -1415,69 +1412,90 @@ IMAGES.forEach((src, i) => {
   }
   typeSplash();
 
- // ---- Background audio (MP3) - NO autoplay, only via user gesture ----
-const bgAudio = document.getElementById("bgAudio");
-const musicBtn = document.getElementById("musicBtn");
-let audioOn = false;
+  // ---- Music (romantic loop) ----
+  let audioOn = false;
+  let ac = null, master = null, oscA = null, oscB = null, lfo = null, lfoGain = null, timer = null;
 
-// iOS-safe: unlock audio context + allow HTMLAudio play
-let ac = null;
+  const musicBtn = document.getElementById('musicBtn');
 
-async function safeResumeAC(){
-  try{
+  function startMusic(){
+    if(audioOn) return;
     ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    if(ac.state === "suspended") await ac.resume();
-  }catch(e){}
-}
+    master = ac.createGain();
+    master.gain.value = 0.0;
+    master.connect(ac.destination);
 
-function updateMusicBtn(){
-  musicBtn.textContent = audioOn ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
-}
+    oscA = ac.createOscillator();
+    oscB = ac.createOscillator();
+    oscA.type = "sine";
+    oscB.type = "triangle";
+    oscA.frequency.value = 220;
+    oscB.frequency.value = 277.18;
 
-async function setBgMusic(on){
-  if(!bgAudio) return;
+    const gA = ac.createGain();
+    const gB = ac.createGain();
+    gA.gain.value = 0.22;
+    gB.gain.value = 0.18;
 
-  audioOn = !!on;
-  updateMusicBtn();
+    lfo = ac.createOscillator();
+    lfoGain = ac.createGain();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.12;
+    lfoGain.gain.value = 18;
 
-  if(audioOn){
-    await safeResumeAC();          // unlock audio engine (mobile)
-    bgAudio.volume = 0.65;
-    const p = bgAudio.play();
-    if(p && typeof p.catch === "function"){
-      p.catch(()=>{ /* autoplay blocked until gesture - but we call from gesture */ });
-    }
-  }else{
-    bgAudio.pause();
-    bgAudio.currentTime = 0;       // optional: reset
+    lfo.connect(lfoGain);
+    lfoGain.connect(oscB.frequency);
+
+    oscA.connect(gA); oscB.connect(gB);
+    gA.connect(master); gB.connect(master);
+
+    oscA.start(); oscB.start(); lfo.start();
+    master.gain.setTargetAtTime(0.24, ac.currentTime, 0.35);
+
+    const chords = [
+      [220, 277.18],
+      [196, 246.94],
+      [174.61, 220],
+      [196, 246.94],
+    ];
+    let idx = 0;
+    timer = setInterval(()=>{
+      if(!audioOn) return;
+      const [f1,f2] = chords[idx % chords.length];
+      oscA.frequency.setTargetAtTime(f1, ac.currentTime, 0.12);
+      oscB.frequency.setTargetAtTime(f2, ac.currentTime, 0.12);
+      idx++;
+    }, 3000);
+
+    audioOn = true;
+    updateMusicBtn();
   }
-}
 
-musicBtn.addEventListener("click", async ()=>{
-  await setBgMusic(!audioOn);
-  confettiBurst(0.5);
-});
+  function stopMusic(){
+    if(!audioOn) return;
+    audioOn = false;
+    if(master) master.gain.setTargetAtTime(0.0, ac.currentTime, 0.18);
+    if(timer) clearInterval(timer);
+    timer = null;
+    updateMusicBtn();
+  }
 
-// Start button = start background music once
-startBtn.addEventListener("click", async ()=>{
-  splash.classList.add("hide");
-  await setBgMusic(true);
-  confettiBurst(1.2);
-  setTimeout(()=>confettiBurst(0.7), 220);
-  showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
-});
+  function toggleMusic(){
+    if(!audioOn) startMusic();
+    else stopMusic();
+  }
 
-// iOS fallback: first interaction anywhere unlocks audio engine (NO auto play)
-function unlockAudioOnce(){
-  safeResumeAC();
-  window.removeEventListener("pointerdown", unlockAudioOnce);
-}
-window.addEventListener("pointerdown", unlockAudioOnce, {passive:true});
-
+  function updateMusicBtn(){
+    musicBtn.textContent = audioOn ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
+  }
+  musicBtn.addEventListener('click', ()=>{
+    toggleMusic();
+    confettiBurst(0.5);
+  });
 
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
-    tryPlayBgAudio();
+    startMusic();
     confettiBurst(1.2);
     setTimeout(()=>confettiBurst(0.7), 220);
     showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
@@ -1590,6 +1608,9 @@ function tryPlayBgAudio(){
   }
 }
 
+// try immediately when page loads
+window.addEventListener("load", tryPlayBgAudio);
+
 // start on first touch/click anywhere (fallback)
 function unlockAudioOnce(){
   tryPlayBgAudio();
@@ -1675,7 +1696,7 @@ I Love You, Eti 💘`;
   document.addEventListener('keydown', (e)=>{ if(e.key === "Escape" && overlay.classList.contains('show')) closeModal(); });
 
   yesBtn.addEventListener('click', ()=>{
-    tryPlayBgAudio();
+    startMusic();
     runSecretYes();
     setTimeout(()=>{
       openModal();
@@ -1826,7 +1847,7 @@ I Love You, Eti 💘`;
     const t1 = t0 + durMs/1000;
 
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.35, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, t1);
 
     o.start(t0);
@@ -1874,40 +1895,29 @@ I Love You, Eti 💘`;
 
   if(bdayBtn){
     updateBdayBtn();
-   bdayBtn.addEventListener('click', async ()=>{
-  await safeResumeAC(); // ✅ iOS unlock guaranteed
+    bdayBtn.addEventListener('click', ()=>{
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if(ac.state === "suspended") ac.resume();
 
-  const wasBgOn = audioOn;
-  if(wasBgOn) bgAudio.pause(); // ✅ stop the “recording” while birthday song plays
-
-  if(!bdayPlaying){
-    bdayPlaying = true;
-    updateBdayBtn();
-    playBirthdaySong();
-    confettiBurst(0.8);
-    showToast(`Happy birthday, my man 🎂💘`, 3600);
-
-    // when song ends - bring bg music back if it was on
-    const totalMs = 280+280+560+560+560+1100 + 280+280+560+560+560+1100 + 280+280+560+560+560+560+1100 + 280+280+560+560+560+1100;
-    setTimeout(()=>{
-      if(wasBgOn) bgAudio.play().catch(()=>{});
-    }, totalMs + 250);
-
-  }else{
-    stopBirthdaySong();
-    showToast(`Okay okay… saving the vocals for Niagara 😌`, 3200);
-    if(wasBgOn) bgAudio.play().catch(()=>{});
+      if(!bdayPlaying){
+        bdayPlaying = true;
+        updateBdayBtn();
+        playBirthdaySong();
+        confettiBurst(0.8);
+        showToast(`Happy birthday, my man 🎂💘`, 3600);
+      }else{
+        stopBirthdaySong();
+        showToast(`Okay okay… saving the vocals for Niagara 😌`, 3200);
+      }
+    });
   }
-});
-
-  }
-
 </script>
+  <audio id="bgAudio" preload="auto" loop playsinline>
+  <source src="pics-for-bd/birthday.mp3" type="audio/mpeg" />
+</audio>
+
 </body>
 </html>
-
-
-
 
 
 
