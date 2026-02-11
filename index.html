@@ -1288,48 +1288,18 @@ Eti 💘
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
-let mp3On = false;  // משתנה לבדיקת מצב האודיו
-const bgAudio = document.getElementById('bgAudio');
-  const musicBtn = document.getElementById('musicBtn');
-
-async function tryPlayBgAudio() {
-  if (!bgAudio) return;  // לוודא שקיימת תגית אודיו
-  bgAudio.volume = 0.65;
-
-  try {
-    await bgAudio.play();  // ניסיון להפעיל את האודיו
-    mp3On = true;
-    updateMusicBtnMp3();  // עדכון כפתור המוזיקה (שינוי טקסט הכפתור)
-  } catch (e) {
-    console.log("Audio playback failed:", e);
-    showToast("Click to start audio.", 5000); // הודעת טעות במקרה של כשלון
+const bgAudio = document.getElementById("bgAudio");
+    async function playMp3() {
+    if (!bgAudio) return;
+    bgAudio.volume = 0.65;
+    try {
+      await bgAudio.play();
+      mp3On = true;
+      updateMusicBtnMp3(); // Update button
+    } catch (e) {
+      showToast("Audio cannot be played automatically. Click to start.", 5000);
+    }
   }
-}
-
-    // async function playMp3() {
-  //   if (!bgAudio) return;
-  //   bgAudio.volume = 0.65;
-  //   try {
-  //     await bgAudio.play();
-  //     mp3On = true;
-  //     updateMusicBtnMp3(); // Update button
-  //   } catch (e) {
-  //     showToast("Audio cannot be played automatically. Click to start.", 5000);
-  //   }
-  // }
-//       async function tryPlayBgAudio() {
-//   if (!bgAudio) return;
-//   bgAudio.volume = 0.65;
-//   try {
-//     await bgAudio.play();
-//     mp3On = true;
-//     updateMusicBtnMp3();
-//   } catch (e) {
-//     console.log("Audio playback failed:", e);
-//     showToast("Click to start audio.", 5000); // Ask for user interaction
-//   }
-// }
-
 
   function stopMp3() {
     if (!bgAudio) return;
@@ -1339,18 +1309,13 @@ async function tryPlayBgAudio() {
   }
 
   const musicBtn = document.getElementById('musicBtn');
-// const bgAudio = document.getElementById('bgAudio');
+  let mp3On = false;
 
-// When the user clicks the button, toggle music
-musicBtn.addEventListener('click', () => {
-  if (!bgAudio.paused) {
-    bgAudio.pause();  // Pause audio
-    musicBtn.textContent = "🔊 Music: OFF";  // Change button text to indicate it's off
-  } else {
-    bgAudio.play();  // Play audio
-    musicBtn.textContent = "🔇 Music: ON";  // Change button text to indicate it's on
-  }
-});
+  musicBtn.addEventListener('click', async () => {
+    if (!mp3On) await playMp3();
+    else stopMp3();
+    confettiBurst(0.5);
+  });
 
   function updateMusicBtnMp3(){
     musicBtn.textContent = mp3On ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
@@ -1491,19 +1456,12 @@ IMAGES.forEach((src, i) => {
 
   const splashLine = `For ${NAME_HIM}. From ${NAME_YOU}. Feb 13–14, 2026. 💘`;
   let ti=0;
-  // function typeSplash(){
-  //   typeText.textContent = splashLine.slice(0, ti++);
-  //   if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
-  // }
-  // typeSplash();
-function typeSplash(){
-  typeText.textContent = splashLine.slice(0, ti++);
-  if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
-  else {
-    startBtn.disabled = false; // Enable button after typing
+  function typeSplash(){
+    typeText.textContent = splashLine.slice(0, ti++);
+    if(ti <= splashLine.length) requestAnimationFrame(typeSplash);
   }
-}
   typeSplash();
+
   // // ---- Music (romantic loop) ----
   // let audioOn = false;
   // let ac = null, master = null, oscA = null, oscB = null, lfo = null, lfoGain = null, timer = null;
@@ -1621,8 +1579,7 @@ function updateMusicBtnMp3(){
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
     // startMusic();
-    // playMp3();
-     tryPlayBgAudio();
+    playMp3();
     confettiBurst(1.2);
     setTimeout(()=>confettiBurst(0.7), 220);
     showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
@@ -1723,18 +1680,18 @@ function updateMusicBtnMp3(){
 // ---- Background audio file (auto-play with fallback) ----
 // const bgAudio = document.getElementById("bgAudio");
 
-// function tryPlayBgAudio(){
-//   if(!bgAudio) return;
-//   bgAudio.volume = 0.65;
+function tryPlayBgAudio(){
+  if(!bgAudio) return;
+  bgAudio.volume = 0.65;
 
-//    const p = bgAudio.play();
-//   if(p && typeof p.then === "function"){
-//     p.then(()=>{
-//       mp3On = true;
-//       updateMusicBtnMp3();
-//     }).catch(()=>{});
-//   }
-// }
+   const p = bgAudio.play();
+  if(p && typeof p.then === "function"){
+    p.then(()=>{
+      mp3On = true;
+      updateMusicBtnMp3();
+    }).catch(()=>{});
+  }
+}
 
 // try immediately when page loads
 window.addEventListener("load", tryPlayBgAudio);
@@ -1825,8 +1782,7 @@ I Love You, Eti 💘`;
 
   yesBtn.addEventListener('click', ()=>{
     // startMusic();
-    // playMp3();
- tryPlayBgAudio();
+    playMp3();
     runSecretYes();
     setTimeout(()=>{
       openModal();
@@ -2045,30 +2001,3 @@ I Love You, Eti 💘`;
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
