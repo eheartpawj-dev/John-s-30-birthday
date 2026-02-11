@@ -1289,39 +1289,6 @@ Eti 💘
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
 const bgAudio = document.getElementById("bgAudio");
-    async function playMp3() {
-    if (!bgAudio) return;
-    bgAudio.volume = 0.65;
-    try {
-      await bgAudio.play();
-      mp3On = true;
-      updateMusicBtnMp3(); // Update button
-    } catch (e) {
-      showToast("Audio cannot be played automatically. Click to start.", 5000);
-    }
-  }
-
-  function stopMp3() {
-    if (!bgAudio) return;
-    bgAudio.pause();
-    mp3On = false;
-    updateMusicBtnMp3();
-  }
-
-  const musicBtn = document.getElementById('musicBtn');
-  let mp3On = false;
-
-  musicBtn.addEventListener('click', async () => {
-    if (!mp3On) await playMp3();
-    else stopMp3();
-    confettiBurst(0.5);
-  });
-
-  function updateMusicBtnMp3(){
-    musicBtn.textContent = mp3On ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
-  }
-
-  updateMusicBtnMp3();
 //   let bgAudio = null;
 
 // window.addEventListener("DOMContentLoaded", () => {
@@ -1550,31 +1517,31 @@ function updateMusicBtnMp3(){
   musicBtn.textContent = mp3On ? "🔇 Music: ON (Mute)" : "🔊 Music: OFF";
 }
 
-// async function playMp3(){
-//   if(!bgAudio) return;
-//   bgAudio.volume = 0.65;
-//   try{
-//     await bgAudio.play();
-//     mp3On = true;
-//     updateMusicBtnMp3();
-//   }catch(e){
-//     // autoplay blocked until user gesture
-//   }
-// }
+async function playMp3(){
+  if(!bgAudio) return;
+  bgAudio.volume = 0.65;
+  try{
+    await bgAudio.play();
+    mp3On = true;
+    updateMusicBtnMp3();
+  }catch(e){
+    // autoplay blocked until user gesture
+  }
+}
 
-// function stopMp3(){
-//   if(!bgAudio) return;
-//   bgAudio.pause();
-//   mp3On = false;
-//   updateMusicBtnMp3();
-// }
+function stopMp3(){
+  if(!bgAudio) return;
+  bgAudio.pause();
+  mp3On = false;
+  updateMusicBtnMp3();
+}
 
-// musicBtn.addEventListener('click', async ()=>{
-//   if(!mp3On) await playMp3();
-//   else stopMp3();
-//   confettiBurst(0.5);
-// });
-// updateMusicBtnMp3();
+musicBtn.addEventListener('click', async ()=>{
+  if(!mp3On) await playMp3();
+  else stopMp3();
+  confettiBurst(0.5);
+});
+updateMusicBtnMp3();
 
   startBtn.addEventListener('click', ()=>{
     splash.classList.add('hide');
