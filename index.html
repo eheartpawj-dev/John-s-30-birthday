@@ -1281,10 +1281,23 @@ Eti 💘
     </div>
   </div>
 </div>
+  <audio id="bgAudio" preload="auto" loop playsinline>
+  <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
+</audio>
+
 <script>
   const NAME_HIM = "John";
   const NAME_YOU = "Eti";
-const bgAudio = document.getElementById("bgAudio");
+// const bgAudio = document.getElementById("bgAudio");
+  let bgAudio = null;
+
+window.addEventListener("DOMContentLoaded", () => {
+  bgAudio = document.getElementById("bgAudio");
+});
+bgAudio.addEventListener("error", () => {
+  showToast("<b>Audio error:</b> couldn't load the mp3. Check path/name.", 6000);
+});
+
 const IMAGES = [
   "pics-for-bd/1.JPG",
   "pics-for-bd/2.JPG",
@@ -1948,13 +1961,10 @@ I Love You, Eti 💘`;
   //   });
   // }
 </script>
-<audio id="bgAudio" preload="auto" loop playsinline>
-  <source src="pics-for-bd/in-da-club.mp3" type="audio/mpeg" />
-</audio>
-
 
 </body>
 </html>
+
 
 
 
