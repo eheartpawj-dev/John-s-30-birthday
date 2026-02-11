@@ -648,9 +648,10 @@
       transform: translateZ(35px);
     }
     .photo3d img{
-      width:100%;
-      height: 210px;
-      object-fit: cover;
+     width:100%;
+    height: 320px;          /* גדול יותר */
+    object-fit: contain;     /* לא חותך */
+    background: rgba(0,0,0,.25); /* יפה אם נשאר “רווחים” */
       display:block;
       transform: translateZ(26px) scale(1.03);
       filter: saturate(1.08) contrast(1.03);
@@ -827,7 +828,8 @@ body{
   }
 
   .photo3d img{
-    height: 200px;
+     height: 320px;
+    object-fit: contain;
   }
 }
 
@@ -1813,6 +1815,7 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
 
 
