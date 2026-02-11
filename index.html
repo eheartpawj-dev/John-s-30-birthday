@@ -1467,6 +1467,14 @@ startBtn.addEventListener("click", async ()=>{
   showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
 });
 
+startBtn.addEventListener('click', ()=>{
+  splash.classList.add("hide");
+  await setBgMusic(true);
+  confettiBurst(1.2);
+  setTimeout(()=>confettiBurst(0.7), 220);
+  showToast(`<b>${NAME_HIM}</b>… press YES 😌💘`, 3400);
+});
+
 // iOS fallback: first interaction anywhere unlocks audio engine (NO auto play)
 function unlockAudioOnce(){
   safeResumeAC();
@@ -1764,6 +1772,7 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
 
 
