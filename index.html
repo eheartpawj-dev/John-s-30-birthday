@@ -863,6 +863,59 @@ body{
     transform: none;           /* optional: smoother on phones */
   }
 }
+    @media (max-width: 640px){
+
+  /* Give space at the top for Music button + Toast */
+  .wrap{ padding-top: 62px; }
+
+  /* Make the YES button less tall on mobile */
+  .yes{
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+
+  /* The row where YES sits – leave room for the NO to run */
+  .btnRow{
+    position: relative;
+    min-height: 72px;     /* ✅ space for NO to move */
+    padding-bottom: 8px;
+  }
+
+  /* NO button smaller so it won’t collide */
+  .no{
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 12px;
+    max-width: 46vw;      /* ✅ prevents huge NO */
+    white-space: nowrap;
+  }
+}
+    /* ===== Mobile: move music button away from toast ===== */
+@media (max-width: 640px){
+  .musicBtn{
+    position: fixed;
+    right: 12px;
+    top: auto;
+    bottom: 12px;      /* ✅ goes to bottom */
+    z-index: 120;      /* above everything */
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+}
+/* ===== Mobile: toast always visible ===== */
+@media (max-width: 640px){
+  .toast{
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 12px;        /* ✅ always visible */
+    max-width: none;
+    z-index: 130;     /* above overlays (except confetti) */
+  }
+}
+
   </style>
 </head>
 
@@ -1838,6 +1891,7 @@ I Love You, Eti 💘`;
 </script>
 </body>
 </html>
+
 
 
 
